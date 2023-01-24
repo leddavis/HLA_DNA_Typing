@@ -7,3 +7,5 @@ Input: HLA Allele Set in fasta format, DNA sequencing data (WGS) for a person th
 Output: Set of HLA alleles present in the sample
 
 We will start with chromosome 6 DNA sequence from the reference genome and build the algorithm using that sequence until data access is granted.
+
+We will create multiple test sequences from that reference sequence
