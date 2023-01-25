@@ -1,5 +1,8 @@
 # Related Work Links and Info
 
+## Reference Sequences for HLA Genes
+https://www.ncbi.nlm.nih.gov/gene/
+
 ## Good description of HLA typing
 https://genomemedicine.biomedcentral.com/articles/10.1186/gm403
 
