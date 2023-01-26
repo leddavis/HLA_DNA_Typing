@@ -34,6 +34,7 @@ def read_fasta(file_name):
         # Adds the next gene/allele to our sequence
         else:
             sequence += line.strip()
+    return sequence
 
               
 def read_HLA_data(HLAs_file):
