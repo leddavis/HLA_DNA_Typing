@@ -48,23 +48,23 @@ def read_fasta(file_name):
     seq_id = ''
     sequence = ''
     for line in file:
-            if line.startswith('>') and sequence: ## Skip first id, this will be for all future ids
-                seq_id = seq_id[1:] ## Removes the carrot
-                ## Check if gene is within hla gene list
-                id_list = seq_id.split()
-                get_gene = id_list[3]
-                gene_id = int(gene_id[8, len(gene_id)-1])
-                if (gene_id in HLA_Gene_IDs.values()):
-                    hla_type = get_hla_type(int(gene_id[8, len(gene_id)-1]))
-                    sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
-                    seq_id = line.strip() ## All IDs 
-                    sequence = ''            
-            ## Capture first id
-            elif line.startswith('>'):  ## First ID
-                seq_id = line.strip()           
-            ## Capture sequences
-            else:
-                sequence += line.strip() ## Reads every line of the sequence and makes it 1 string         
+        if line.startswith('>') and sequence: ## Skip first id, this will be for all future ids
+            seq_id = seq_id[1:] ## Removes the carrot
+            ## Check if gene is within hla gene list
+            id_list = seq_id.split()
+            get_gene = id_list[3]
+            gene_id = int(gene_id[8, len(gene_id)-1])
+            if (gene_id in HLA_Gene_IDs.values()):
+                hla_type = get_hla_type(gene_id)
+                sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
+                seq_id = line.strip() ## All IDs 
+                sequence = ''            
+        ## Capture first id
+        elif line.startswith('>'):  ## First ID
+            seq_id = line.strip()           
+        ## Capture sequences
+        else:
+            sequence += line.strip() ## Reads every line of the sequence and makes it 1 string         
     ## This handles the last sequence in the file
     if seq_id and sequence: ## Last sequence
         ## Check if gene is within hla gene list
@@ -99,16 +99,16 @@ def read_HLA_data(HLAs_file):
                 HLAs_data.append(Sample_Seq(hla_id, allele, hla_type)) ## Adds allele to list
                 hla_id = line.strip() ## All allele sequences
                 allele = ''            
-            ## Capture first id
-            elif line.startswith('>'):  ## First allele id
-                hla_id = line.strip()           
-            ## Capture sequences
-            else:
-                allele += line.strip() ## Reads every line of the sequence and makes it 1 string         
+        ## Capture first id
+        elif line.startswith('>'):  ## First allele id
+            hla_id = line.strip()           
+        ## Capture sequences
+        else:
+            allele += line.strip() ## Reads every line of the sequence and makes it 1 string         
     ## This handles the last sequence in the file
     if hla_id and allele: ## Last sequence
+              
         hla_id = hla_id[1:]
-        ## Check if gene is within hla gene list
         id_list = hla_id.split()
         hla_form = id_list[1]
         get_hla = hla_form.split('*')
