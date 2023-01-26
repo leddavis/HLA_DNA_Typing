@@ -80,7 +80,7 @@ def read_fasta(file_name):
               
               
 def read_HLA_data(HLAs_file):
-    HLAs_data = [] ## List of the HLA alleles
+    HLAs_data = {} ## Dictionary of lists of HLA alleles
     if '.gz' in file_name:
         file = gzip.open(file_name, 'rt')
     else:
@@ -96,7 +96,10 @@ def read_HLA_data(HLAs_file):
             get_hla = hla_form.split('*')
             hla_type = get_hla[0]
             if (hla_type in HLA_Gene_IDs.keys()):
-                HLAs_data.append(Sample_Seq(hla_id, allele, hla_type)) ## Adds allele to list
+                if (hla_type in HLAs_data.keys():
+                    HLAs_data[hla_type].update(HLA_Allele(hla_id, allele))
+                else:
+                    HLAs_data[hla_type] = HLA_Allele(hla_id, allele)
                 hla_id = line.strip() ## All allele sequences
                 allele = ''            
         ## Capture first id
@@ -107,18 +110,20 @@ def read_HLA_data(HLAs_file):
             allele += line.strip() ## Reads every line of the sequence and makes it 1 string         
     ## This handles the last sequence in the file
     if hla_id and allele: ## Last sequence
-              
         hla_id = hla_id[1:]
         id_list = hla_id.split()
         hla_form = id_list[1]
         get_hla = hla_form.split('*')
         hla_type = get_hla[0]
         if (hla_type in HLA_Gene_IDs.keys()):
-            HLAs_data.append(Sample_Seq(hla_id, allele, hla_type)) ## Adds allele to list
+            if (hla_type in HLAs_data.keys():
+                    HLAs_data[hla_type].update(HLA_Allele(hla_id, allele))
+                else:
+                    HLAs_data[hla_type] = HLA_Allele(hla_id, allele)
     return HLAs_data
 
               
-def match_HLA(sample_data_seq, HLA_data):
+def match_HLA(sample_data, HLA_data):
     match = False
     ## Compare sample to HLA_Alleles for present alleles
     ## if true, add to master list for output
@@ -144,7 +149,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
-    HLAs_data = read_HLA_data(HLAs_file) ## How can I get this to be the file directly from the IGHT-HLA dataase repository???? For now use downloaded version
+    HLAs_data = read_HLA_data(HLAs_file) ## How can I get this to be the file directly from the IGHT-HLA database repository???? For now use downloaded version
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
     for allele in HLAs_data:
