@@ -7,10 +7,9 @@ class Sample_Seq:
         self.hla_type = hla_type
     
 class HLA_Allele:
-    def __init__(self, hla_id, allele, hla_type):
-        self.seq_id = hla_id
-        self.sequence = allele
-        self.hla_type = hla_type
+    def __init__(self, hla_id, allele):
+        self.hla_id = hla_id
+        self.allele = allele
 
 ## Function to get hla_type (HLA gene type) from the gene ID
 def get_hla_type(gene_id):
@@ -80,7 +79,7 @@ def read_fasta(file_name):
               
               
 def read_HLA_data(HLAs_file):
-    HLAs_data = {} ## Dictionary of lists of HLA alleles
+    HLAs_data = {} ## Dictionary with keys as HLA genes and values as the alleles for that gene
     if '.gz' in file_name:
         file = gzip.open(file_name, 'rt')
     else:
@@ -97,9 +96,10 @@ def read_HLA_data(HLAs_file):
             hla_type = get_hla[0]
             if (hla_type in HLA_Gene_IDs.keys()):
                 if (hla_type in HLAs_data.keys():
-                    HLAs_data[hla_type].update(HLA_Allele(hla_id, allele))
+                    HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
                 else:
-                    HLAs_data[hla_type] = HLA_Allele(hla_id, allele)
+                    HLAs_data.setdefault(hla_type, [])
+                    HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
                 hla_id = line.strip() ## All allele sequences
                 allele = ''            
         ## Capture first id
@@ -117,9 +117,10 @@ def read_HLA_data(HLAs_file):
         hla_type = get_hla[0]
         if (hla_type in HLA_Gene_IDs.keys()):
             if (hla_type in HLAs_data.keys():
-                    HLAs_data[hla_type].update(HLA_Allele(hla_id, allele))
-                else:
-                    HLAs_data[hla_type] = HLA_Allele(hla_id, allele)
+                    HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
+            else:
+                HLAs_data.setdefault(hla_type, [])
+                HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
     return HLAs_data
 
               
@@ -153,7 +154,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
     for allele in HLAs_data:
-        is_Match = match_HLA(sample_data_seq, allele.sequence)
+        is_Match = match_HLA(sample_data_seq, allele.sequence) ## check the key that matches hla_type for seq
         if is_Match:
               matches.append(allele.ID)
     return matches
