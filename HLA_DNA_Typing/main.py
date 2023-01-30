@@ -16,7 +16,7 @@ def get_hla_type(gene_id):
     for key, value in HLA_Gene_IDs.items():
         if gene_id == value:
             return key
-    return "key doesn't exist"
+    return "Key doesn't exist"
 
 def read_sample_data(file_name, file_type):
     ## fastq file must align to SAM/BAM, then convert to fasta, then be read
