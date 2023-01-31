@@ -128,6 +128,8 @@ def match_HLA(sample_data, HLA_data):
     match = False
     ## Compare sample to HLA_Alleles for present alleles
     ## if true, add to master list for output
+    if sample_data == HLA_data:
+        return
     return match
 
 def convert_aligned_fasta(aligned_file):
@@ -154,9 +156,10 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
     for allele in HLAs_data:
-        is_Match = match_HLA(sample_data_seq, allele.sequence) ## check the key that matches hla_type for seq
-        if is_Match:
-              matches.append(allele.ID)
+        for seq in sample_data:
+            is_Match = match_HLA(seq.sequence, allele.sequence) ## check the key that matches hla_type for seq
+            if is_Match:
+                matches.append(allele.ID)
     return matches
               
               
