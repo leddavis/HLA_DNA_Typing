@@ -1,4 +1,5 @@
 import pandas as pd
+import bamnostic as bs
 
 class Sample_Seq:
     def __init__(self, seq_id, sequence, hla_type):
@@ -22,11 +23,11 @@ def read_sample_data(file_name, file_type):
     ## fastq file must align to SAM/BAM, then convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
         aligned_file = align_sequence(file_name)
-        sample_data = convert_aligned_fasta(aligned_file)
+        sample_data = convert_aligned_fasta(aligned_file, file_type)
         sample_data_list = read_fasta(sample_data, HLA_Gene_IDs)
     ## SAM/BAM must convert to fasta, then be read
     elif file_type == "sam" or file_type == "bam":
-        sample_data = convert_aligned_fasta(file_name)
+        sample_data = convert_aligned_fasta(file_name, file_type)
         sample_data_list = read_fasta(sample_data)
     ## fasta files get read
     elif file_type == "fasta" or file_type == "fa":
@@ -132,11 +133,16 @@ def match_HLA(sample_data, HLA_data):
     else:
         return false
 
-def convert_aligned_fasta(aligned_file):
+## Converts SAM/BAM file to fasta
+def convert_aligned_fasta(aligned_file, file_type):
     fasta_file = None
-    ## Do conversion here
+    if file_type == "sam":
+        ## Use samtools view to convert to bam (dependency)
+    ##Change bam file to fasta file - bam2fasta
+    
     return fasta_file
 
+## Converts fastq to sam or bam
 def align_sequence(fastq_file):
     aligned_file = None
     ## Do alignment here (use BowTie, TopHat, etc.)
