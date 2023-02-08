@@ -188,11 +188,12 @@ def convert_aligned_fasta(aligned_file, file_type):
         aligned_file (str): input file in SAM or BAM format
         file_type (str): input file type, either sam or bam
     
-    Returns (??): match - A boolean value that is true if the two sequences 
+    Returns (file): match - A boolean value that is true if the two sequences 
                     are equal, and false if not
     '''
     fasta_file = None
     if file_type == "sam":
+        ## make sure to open the file
         ## Use samtools view to convert to bam (dependency)
     ##Change bam file to fasta file - bam2fasta
     
