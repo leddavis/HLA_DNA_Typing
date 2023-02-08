@@ -17,11 +17,11 @@
 - [x] Task 3.1 Check input data file type
 - [ ] Task 3.2 Convert fastq files to fasta for simple file comparison
 - [ ] Task 3.3 Convert SAM/BAM format to fasta format
-- [ ][x] Task 3.3.1 Determine if file is in SAM or BAM format
-- [ ][x] Task 3.3.2 Change SAM files to BAM format
-            - Dependency: samtools
-      - [ ] Task 3.3.3 Change BAM files to fasta
-            - Dependency: bam2fasta
+            - [ ]Task 3.3.1 Determine if file is in SAM or BAM format
+            - [ ] Task 3.3.2 Change SAM files to BAM format
+                        - Dependency: samtools
+             - [ ] Task 3.3.3 Change BAM files to fasta
+                        - Dependency: bam2fasta
  
 - Activity 4: Unit Test: Ensure the file is in fasta format before any comparison is done
 - [ ] Task 4.1 Create sample data files from the larger files
