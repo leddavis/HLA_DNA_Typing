@@ -17,16 +17,16 @@
 - [x] Task 3.1 Check input data file type
 - [ ] Task 3.2 Convert fastq files to fasta for simple file comparison
 - [ ] Task 3.3 Convert SAM/BAM format to fasta format
-            - [ ]Task 3.3.1 Determine if file is in SAM or BAM format
-            - [ ] Task 3.3.2 Change SAM files to BAM format
-                        - Dependency: samtools
-             - [ ] Task 3.3.3 Change BAM files to fasta
-                        - Dependency: bam2fasta
+       - Task 3.3.1 Determine if file is in SAM or BAM format
+       - Task 3.3.2 Change SAM files to BAM format
+               - Dependency: samtools
+       - Task 3.3.3 Change BAM files to fasta
+               - Dependency: bam2fasta
  
 - Activity 4: Unit Test: Ensure the file is in fasta format before any comparison is done
 - [ ] Task 4.1 Create sample data files from the larger files
-      -[ ] Task 4.1.1 Create sample_fasta_test1, sample_bam_test1, sample_sam_test1, and sample_fastq_test1: each file type with 1 reference sequence
-      -[ ] Task 4.1.2 Run the input data functions and check resulting files for correct fasta format
+      - Task 4.1.1 Create sample_fasta_test1, sample_bam_test1, sample_sam_test1, and sample_fastq_test1: each file type with 1 reference sequence
+      - Task 4.1.2 Run the input data functions and check resulting files for correct fasta format
 
 - Activity 5: Create matching algorithm
 - [x] Loop through the HLA list
@@ -34,9 +34,9 @@
 
 - Activity 6: Unit Test: Detect the correct allele with only 1 sequence in the input data and only the alleles for that HLA gene
 - [ ] Task 6.1 Create sample data files from the larger files
-      -[ ] Task 6.1.1 Create sample_data_test2: fasta file with 1 reference sequence for HLA-A
-      -[ ] Task 6.1.2 Create hla_data_test2: fasta file with the alleles for gene HLA-A
-      -[ ] Task 6.1.3 Run the functions to determine if algorithm produces the correct allele
+      - Task 6.1.1 Create sample_data_test2: fasta file with 1 reference sequence for HLA-A
+      - Task 6.1.2 Create hla_data_test2: fasta file with the alleles for gene HLA-A
+      - Task 6.1.3 Run the functions to determine if algorithm produces the correct allele
       
 - Activity 7: Implement code to account for many sequences
 
