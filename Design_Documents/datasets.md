@@ -9,5 +9,5 @@ https://github.com/ANHIG/IMGTHLA/blob/Latest/hla_gen.fasta  ** for now, this wil
   - Relevant Non-HLA Gene Alleles: https://hla.alleles.org/alleles/classo.html
 
 - Sample Data: fastq, fasta, or SAM/BAM 
-File will be inputted by the user
+file will be inputted by the user
   - Testing data: files from https://www.ncbi.nlm.nih.gov/refseq/ 
