@@ -14,12 +14,30 @@ class HLA_Allele:
 
 ## Function to get hla_type (HLA gene type) from the gene ID
 def get_hla_type(gene_id):
+    '''
+    Finds the HLA type if the gene ID is within the HLA locus
+    
+    Parameters:
+        gene_id (int): an interger value of the gene ID of interest
+    
+    Returns (str): key - the HLA type corresponding to the gene ID of interest
+    '''
     for key, value in HLA_Gene_IDs.items():
         if gene_id == value:
             return key
     return "Key doesn't exist"
 
 def read_sample_data(file_name, file_type):
+    '''
+    Reads the input file and the file type. Depending on the file type, directs the 
+    file to the correct function for conversion to fasta and processing of fasta.
+    
+    Parameters:
+        file_name (str): user input file
+        file_type (str): user input file type, only accpets fasta, fa, fastq, fq, bam, or sam
+    
+    Returns (list): sample_data_list - A list of Sample_Seq objects for the given input file
+    '''
     ## fastq file must align to SAM/BAM, then convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
         aligned_file = align_sequence(file_name)
@@ -38,8 +56,15 @@ def read_sample_data(file_name, file_type):
     return sample_data_list
 
               
-## Function to read fasta file with multiple gene reads
 def read_fasta(file_name):
+    '''
+    Reads the input file once it is in fasta format, then creates a list of all of the input sequences
+    
+    Parameters:
+        file_name (str): user input file, must be in fasta format
+    
+    Returns (list): sample_data_list - A list of Sample_Seq objects for the given input file
+    '''
     sample_data_list = []
     if '.gz' in file_name:
         file = gzip.open(file_name, 'rt')
@@ -80,6 +105,16 @@ def read_fasta(file_name):
               
               
 def read_HLA_data(HLAs_file):
+    '''
+    Reads the HLA alleles data file in fasta format, then connects the HLA types with
+    all of their alleles
+    
+    Parameters:
+        HLAs_file (str): HLA alleles data, fasta file from IPD-IMGT/HLA database
+    
+    Returns (dict): HLAs_data - A dictionary with each HLA type as the keys and their
+                    corresponding HLA_Allele objects as the values
+    '''
     HLAs_data = {} ## Dictionary with keys as HLA genes and values as the alleles for that gene
     if '.gz' in file_name:
         file = gzip.open(file_name, 'rt')
@@ -126,15 +161,36 @@ def read_HLA_data(HLAs_file):
 
               
 def match_HLA(sample_data, HLA_data):
+    '''
+    Determines if the sample sequence is a match to the HLA allele sequence
+    
+    Parameters:
+        sample_data (str): DNA sequence of the user's input
+        HLA_data (str): DNA sequence of the current HLA allele
+    
+    Returns (bool): match - A boolean value that is true if the two sequences 
+                    are equal, and false if not
+    '''
     match = False
     ## Compare sample to HLA_Alleles for present alleles
     if sample_data == HLA_data:
-        return true
+        match = true
     else:
-        return false
+        match = false
+    return match
 
 ## Converts SAM/BAM file to fasta
 def convert_aligned_fasta(aligned_file, file_type):
+    '''
+    Converts SAM or BAM files to fasta format
+    
+    Parameters:
+        aligned_file (str): input file in SAM or BAM format
+        file_type (str): input file type, either sam or bam
+    
+    Returns (??): match - A boolean value that is true if the two sequences 
+                    are equal, and false if not
+    '''
     fasta_file = None
     if file_type == "sam":
         ## Use samtools view to convert to bam (dependency)
@@ -144,6 +200,9 @@ def convert_aligned_fasta(aligned_file, file_type):
 
 ## Converts fastq to sam or bam
 def align_sequence(fastq_file):
+    '''
+    Don't need???
+    '''
     aligned_file = None
     ## Do alignment here (use BowTie, TopHat, etc.)
     return aligned_file
