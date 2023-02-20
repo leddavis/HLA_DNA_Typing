@@ -1,5 +1,6 @@
 import pandas as pd
 import bamnostic as bs
+import os
 
 class Sample_Seq:
     def __init__(self, seq_id, sequence, hla_type):
@@ -199,14 +200,23 @@ def convert_aligned_fasta(aligned_file, file_type):
     
     return fasta_file
 
-## Converts fastq to sam or bam
+## Converts fastq to fasta
+## Change this function name DO THIS IN THE WORKFLOW
 def align_sequence(fastq_file):
     '''
-    Don't need???
+    DEPENDENCY: bioconda
+    https://onestopdataanalysis.com/fastq-to-fasta/
+    https://janakiev.com/blog/python-shell-commands/
+    https://bioconda.github.io/
     '''
-    aligned_file = None
-    ## Do alignment here (use BowTie, TopHat, etc.)
-    return aligned_file
+    if '.gz' in fastq_file:
+        stream = os.system('seqtk seq -a INPUT.fq.gz > OUTPUT.fa')
+        
+    else:
+        stream = os.system('cat INPUT.fastq | awk '{if(NR%4==1) {printf(">%s\n",substr($0,2));} 
+                                           else if(NR%4==2) print;}' > OUTPUT.fasta') 
+    fasta_file = stream.read()
+    return fasta_file
 
 def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     HLA_Gene_IDs = {'A': 3105, 'B': 3106, 'C': 3107, 'E': 3133, 'F': 3134, \

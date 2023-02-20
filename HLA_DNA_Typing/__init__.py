@@ -1,1 +1,1 @@
-__all__ = ["main", "read_data"]
+__all__ = ["main"]
