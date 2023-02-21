@@ -14,7 +14,7 @@ def test_get_HLA_type_b():
     key = m.get_hla_type(gene_id)
     assert key == expected_key, "The HLA type is " + expected_key + ", not " + key
 
-def test_get_HLA_type_b():
+def test_get_HLA_type_non():
     gene_id = 68904576
     #expected result is gene lhlkah
     expected_key = "Key doesn't exist"
