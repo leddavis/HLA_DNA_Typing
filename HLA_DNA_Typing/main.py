@@ -181,7 +181,7 @@ def match_HLA(sample_data, HLA_data):
     return match
 
 ## Converts SAM/BAM file to fasta
-def sam_bam_to_fasta(aligned_file, file_type, fasta_file = 'result.fasta'):
+def sam_bam_to_fasta(aligned_file, file_type):
     '''
     Converts SAM or BAM files to fasta format
     
@@ -209,7 +209,9 @@ def fastq_to_fasta(fastq_file):
     https://janakiev.com/blog/python-shell-commands/
     https://bioconda.github.io/
     '''
-    stream = os.system('seqtk seq -a ' + fastq_file + ' > ' + fasta_file)
+    exit_status = os.system('seqtk seq -a ' + fastq_file + ' > temp.fasta')
+    ## exit status should be zero try except
+    stream = open('temp.fasta')
     return stream
 
 def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
