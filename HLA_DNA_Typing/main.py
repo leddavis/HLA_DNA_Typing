@@ -27,6 +27,7 @@ def get_hla_type(gene_id):
         if gene_id == value:
             return key
     return "Key doesn't exist"
+    
 
 def read_sample_data(file_name, file_type):
     '''
