@@ -42,11 +42,11 @@ def read_sample_data(file_name, file_type):
     '''
     ## fastq file must convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
-        sample_data = sam_bam_to_fasta(aligned_file, file_type, ##what here)
+        sample_data = sam_bam_to_fasta(aligned_file, file_type)
         sample_data_list = read_fasta(sample_data, HLA_Gene_IDs)
     ## SAM/BAM must convert to fasta, then be read
     elif file_type == "sam" or file_type == "bam":
-        sample_data = sam_bam_to_fasta(file_name, file_type, ##what here)
+        sample_data = sam_bam_to_fasta(file_name, file_type)
         sample_data_list = read_fasta(sample_data)
     ## fasta files get read
     elif file_type == "fasta" or file_type == "fa":
@@ -202,7 +202,7 @@ def sam_bam_to_fasta(aligned_file, file_type, fasta_file = 'result.fasta'):
 
 ## Converts fastq to fasta
 ## Change this function name DO THIS IN THE WORKFLOW
-def fastq_to_fasta(fastq_file, fasta_file = 'result.fasta'):
+def fastq_to_fasta(fastq_file):
     '''
     DEPENDENCY: bioconda
     https://onestopdataanalysis.com/fastq-to-fasta/
@@ -210,8 +210,7 @@ def fastq_to_fasta(fastq_file, fasta_file = 'result.fasta'):
     https://bioconda.github.io/
     '''
     stream = os.system('seqtk seq -a ' + fastq_file + ' > ' + fasta_file)
-    fasta_file = stream
-    return fasta_file
+    return stream
 
 def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     HLA_Gene_IDs = {'A': 3105, 'B': 3106, 'C': 3107, 'E': 3133, 'F': 3134, \
