@@ -39,14 +39,13 @@ def read_sample_data(file_name, file_type):
     
     Returns (list): sample_data_list - A list of Sample_Seq objects for the given input file
     '''
-    ## fastq file must align to SAM/BAM, then convert to fasta, then be read
+    ## fastq file must convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
-        aligned_file = align_sequence(file_name)
-        sample_data = convert_aligned_fasta(aligned_file, file_type)
+        sample_data = sam_bam_to_fasta(aligned_file, file_type, ##what here)
         sample_data_list = read_fasta(sample_data, HLA_Gene_IDs)
     ## SAM/BAM must convert to fasta, then be read
     elif file_type == "sam" or file_type == "bam":
-        sample_data = convert_aligned_fasta(file_name, file_type)
+        sample_data = sam_bam_to_fasta(file_name, file_type, ##what here)
         sample_data_list = read_fasta(sample_data)
     ## fasta files get read
     elif file_type == "fasta" or file_type == "fa":
@@ -181,12 +180,12 @@ def match_HLA(sample_data, HLA_data):
     return match
 
 ## Converts SAM/BAM file to fasta
-def convert_aligned_fasta(aligned_file, file_type):
+def sam_bam_to_fasta(aligned_file, file_type, fasta_file = 'result.fasta'):
     '''
     Converts SAM or BAM files to fasta format
     
     Parameters:
-        aligned_file (str): input file in SAM or BAM format
+        aligned_file (str): input file in SAM or BAM forma
         file_type (str): input file type, either sam or bam
     
     Returns (file): match - A boolean value that is true if the two sequences 
@@ -202,20 +201,15 @@ def convert_aligned_fasta(aligned_file, file_type):
 
 ## Converts fastq to fasta
 ## Change this function name DO THIS IN THE WORKFLOW
-def align_sequence(fastq_file):
+def fastq_to_fasta(fastq_file, fasta_file = 'result.fasta'):
     '''
     DEPENDENCY: bioconda
     https://onestopdataanalysis.com/fastq-to-fasta/
     https://janakiev.com/blog/python-shell-commands/
     https://bioconda.github.io/
     '''
-    if '.gz' in fastq_file:
-        stream = os.system('seqtk seq -a INPUT.fq.gz > OUTPUT.fa')
-        
-    else:
-        stream = os.system('cat INPUT.fastq | awk '{if(NR%4==1) {printf(">%s\n",substr($0,2));} 
-                                           else if(NR%4==2) print;}' > OUTPUT.fasta') 
-    fasta_file = stream.read()
+    stream = os.system('seqtk seq -a ' + fastq_file + ' > ' + fasta_file)
+    fasta_file = stream
     return fasta_file
 
 def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
@@ -235,7 +229,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
         for seq in sample_data:
             is_Match = match_HLA(seq.sequence, allele.sequence) ## check the key that matches hla_type for seq
             if is_Match:
-                ## if `e, add to master list for output
+                ## if True, add to master list for output
                 matches.append(allele.ID)
     return matches
               
