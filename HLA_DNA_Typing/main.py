@@ -42,8 +42,8 @@ def read_sample_data(file_name, file_type):
     '''
     ## fastq file must convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
-        sample_data = sam_bam_to_fasta(aligned_file, file_type)
-        sample_data_list = read_fasta(sample_data, HLA_Gene_IDs)
+        sample_data = fastq_to_fasta(file_name, file_type)
+        sample_data_list = read_fasta(sample_data)
     ## SAM/BAM must convert to fasta, then be read
     elif file_type == "sam" or file_type == "bam":
         sample_data = sam_bam_to_fasta(file_name, file_type)
@@ -53,7 +53,7 @@ def read_sample_data(file_name, file_type):
         sample_data_list = read_fasta(file_name)
     ## Otherwise, ask for new file type
     else:
-        print("File is not in acceptable format. Only accepts fasta, fa, fastq, fq, bam, or sam"
+        print("File is not in acceptable format. Only accepts fasta, fa, fastq, fq, bam, or sam")
     return sample_data_list
 
               
@@ -100,8 +100,8 @@ def read_fasta(file_name):
         gene_id = int(gene_id[8, len(gene_id)-1])
         if (gene_id in HLA_Gene_IDs.values()):
             hla_type = get_hla_type(gene_id)
-                seq_id = seq_id[1:]
-                sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
+            seq_id = seq_id[1:]
+            sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
     return sample_data_list
               
               
@@ -132,7 +132,7 @@ def read_HLA_data(HLAs_file):
             get_hla = hla_form.split('*')
             hla_type = get_hla[0]
             if (hla_type in HLA_Gene_IDs.keys()):
-                if (hla_type in HLAs_data.keys():
+                if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
                 else:
                     HLAs_data.setdefault(hla_type, [])
@@ -153,7 +153,7 @@ def read_HLA_data(HLAs_file):
         get_hla = hla_form.split('*')
         hla_type = get_hla[0]
         if (hla_type in HLA_Gene_IDs.keys()):
-            if (hla_type in HLAs_data.keys():
+            if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
             else:
                 HLAs_data.setdefault(hla_type, [])
@@ -194,10 +194,13 @@ def sam_bam_to_fasta(aligned_file, file_type):
     '''
     fasta_file = None
     if file_type == "sam":
-        ## make sure to open the file
         ## Use samtools view to convert to bam (dependency)
+        exit_status = os.system('samtools view -S -b ' + sample.sam + ' > temp.bam')
+        temp_bam = open('temp.bam')  
+        ## bamtofasta
+    else:
+        ## bamtofasta
     ##Change bam file to fasta file - bam2fasta
-    
     return fasta_file
 
 ## Converts fastq to fasta
