@@ -182,8 +182,9 @@ def match_HLA(sample_data, HLA_data):
 
 ## Converts SAM/BAM file to fasta
 def sam_bam_to_fasta(aligned_file, file_type):
+    ## https://www.biostars.org/p/129763/
     '''
-    Converts SAM or BAM files to fasta format
+    Converts SAM or BAM files to fasta format conda install -c bioconda bam2fasta
     
     Parameters:
         aligned_file (str): input file in SAM or BAM forma
@@ -195,19 +196,21 @@ def sam_bam_to_fasta(aligned_file, file_type):
     fasta_file = None
     if file_type == "sam":
         ## Use samtools view to convert to bam (dependency)
-        exit_status = os.system('samtools view -S -b ' + sample.sam + ' > temp.bam')
-        temp_bam = open('temp.bam')  
-        ## bamtofasta
+        exit_status = os.system('samtools view -S -b ' + aligned_file + ' > temp.bam')
+        temp_bam = open('temp.bam')
+        bamtofasta = os.system('samtools bam2fq ' + temp_bam + ' | seqtk seq -A > temp.fa')
+        stream = open('temp.fasta')
     else:
-        ## bamtofasta
-    ##Change bam file to fasta file - bam2fasta
-    return fasta_file
+        ##Change bam file to fasta file
+        bamtofasta = os.system('samtools bam2fq ' + aligned_file + ' | seqtk seq -A > temp.fa')
+        stream = open('temp.fasta')
+    return stream
 
 ## Converts fastq to fasta
 ## Change this function name DO THIS IN THE WORKFLOW
 def fastq_to_fasta(fastq_file):
     '''
-    DEPENDENCY: bioconda
+    DEPENDENCY: bioconda 
     https://onestopdataanalysis.com/fastq-to-fasta/
     https://janakiev.com/blog/python-shell-commands/
     https://bioconda.github.io/
