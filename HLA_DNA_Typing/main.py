@@ -14,7 +14,7 @@ class HLA_Allele:
         self.allele = allele
 
 ## Function to get hla_type (HLA gene type) from the gene ID
-def get_hla_type(gene_id):
+def get_hla_type(gene_id, gene_id_dict):
     '''
     Finds the HLA type if the gene ID is within the HLA locus
     
@@ -81,7 +81,7 @@ def read_fasta(file_name):
             get_gene = id_list[3]
             gene_id = int(gene_id[8, len(gene_id)-1])
             if (gene_id in HLA_Gene_IDs.values()):
-                hla_type = get_hla_type(gene_id)
+                hla_type = get_hla_type(gene_id, HLA_Gene_IDs)
                 sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
                 seq_id = line.strip() ## All IDs 
                 sequence = ''            
@@ -99,7 +99,7 @@ def read_fasta(file_name):
         gene_id = id_list[3]
         gene_id = int(gene_id[8, len(gene_id)-1])
         if (gene_id in HLA_Gene_IDs.values()):
-            hla_type = get_hla_type(gene_id)
+            hla_type = get_hla_type(gene_id, HLA_Gene_IDs)
             seq_id = seq_id[1:]
             sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
     return sample_data_list
