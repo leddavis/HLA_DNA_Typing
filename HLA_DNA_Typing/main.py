@@ -222,6 +222,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
+    os.system("curl -O https://github.com/ANHIG/IMGTHLA/Latest/fasta/hla_gen.fasta")
     HLAs_data = read_HLA_data('hla_gen.fasta') ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
