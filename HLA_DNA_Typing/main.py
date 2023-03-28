@@ -14,7 +14,7 @@ class HLA_Allele:
         self.allele = allele
 
 ## Function to get hla_type (HLA gene type) from the gene ID
-def get_hla_type(gene_id):
+def get_hla_type(gene_id, gene_id_dict):
     '''
     Finds the HLA type if the gene ID is within the HLA locus
     
@@ -23,12 +23,13 @@ def get_hla_type(gene_id):
     
     Returns (str): key - the HLA type corresponding to the gene ID of interest
     '''
-    for key, value in HLA_Gene_IDs.items():
+    for key, value in gene_id_dict.items():
         if gene_id == value:
             return key
     return "Key doesn't exist"
+    
 
-def read_sample_data(file_name, file_type):
+def read_sample_data(file_name, file_type, gene_id_dict):
     '''
     Reads the input file and the file type. Depending on the file type, directs the 
     file to the correct function for conversion to fasta and processing of fasta.
@@ -41,22 +42,22 @@ def read_sample_data(file_name, file_type):
     '''
     ## fastq file must convert to fasta, then be read
     if file_type == "fastq" or file_type == "fq":
-        sample_data = sam_bam_to_fasta(aligned_file, file_type, ##what here)
-        sample_data_list = read_fasta(sample_data, HLA_Gene_IDs)
+        sample_data = fastq_to_fasta(file_name, file_type)
+        sample_data_list = read_fasta(sample_data, gene_id_dict)
     ## SAM/BAM must convert to fasta, then be read
     elif file_type == "sam" or file_type == "bam":
-        sample_data = sam_bam_to_fasta(file_name, file_type, ##what here)
-        sample_data_list = read_fasta(sample_data)
+        sample_data = sam_bam_to_fasta(file_name, file_type)
+        sample_data_list = read_fasta(sample_data, gene_id_dict)
     ## fasta files get read
     elif file_type == "fasta" or file_type == "fa":
-        sample_data_list = read_fasta(file_name)
+        sample_data_list = read_fasta(file_name, gene_id_dict)
     ## Otherwise, ask for new file type
     else:
-        print("File is not in acceptable format. Only accepts fasta, fa, fastq, fq, bam, or sam"
+        print("File is not in acceptable format. Only accepts fasta, fa, fastq, fq, bam, or sam")
     return sample_data_list
 
               
-def read_fasta(file_name):
+def read_fasta(file_name, gene_id_dict):
     '''
     Reads the input file once it is in fasta format, then creates a list of all of the input sequences
     
@@ -79,8 +80,8 @@ def read_fasta(file_name):
             id_list = seq_id.split()
             get_gene = id_list[3]
             gene_id = int(gene_id[8, len(gene_id)-1])
-            if (gene_id in HLA_Gene_IDs.values()):
-                hla_type = get_hla_type(gene_id)
+            if (gene_id in gene_id_dict.values()):
+                hla_type = get_hla_type(gene_id, gene_id_dict)
                 sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
                 seq_id = line.strip() ## All IDs 
                 sequence = ''            
@@ -97,14 +98,14 @@ def read_fasta(file_name):
         id_list = seq_id.split()
         gene_id = id_list[3]
         gene_id = int(gene_id[8, len(gene_id)-1])
-        if (gene_id in HLA_Gene_IDs.values()):
-            hla_type = get_hla_type(gene_id)
-                seq_id = seq_id[1:]
-                sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
+        if (gene_id in gene_id_dict.values()):
+            hla_type = get_hla_type(gene_id, gene_id_dict)
+            seq_id = seq_id[1:]
+            sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
     return sample_data_list
               
               
-def read_HLA_data(HLAs_file):
+def read_HLA_data(HLAs_file, gene_id_dict):
     '''
     Reads the HLA alleles data file in fasta format, then connects the HLA types with
     all of their alleles
@@ -130,8 +131,8 @@ def read_HLA_data(HLAs_file):
             hla_form = id_list[1]
             get_hla = hla_form.split('*')
             hla_type = get_hla[0]
-            if (hla_type in HLA_Gene_IDs.keys()):
-                if (hla_type in HLAs_data.keys():
+            if (hla_type in gene_id_dict.keys()):
+                if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
                 else:
                     HLAs_data.setdefault(hla_type, [])
@@ -151,8 +152,8 @@ def read_HLA_data(HLAs_file):
         hla_form = id_list[1]
         get_hla = hla_form.split('*')
         hla_type = get_hla[0]
-        if (hla_type in HLA_Gene_IDs.keys()):
-            if (hla_type in HLAs_data.keys():
+        if (hla_type in gene_id_dict.keys()):
+            if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
             else:
                 HLAs_data.setdefault(hla_type, [])
@@ -180,9 +181,10 @@ def match_HLA(sample_data, HLA_data):
     return match
 
 ## Converts SAM/BAM file to fasta
-def sam_bam_to_fasta(aligned_file, file_type, fasta_file = 'result.fasta'):
+def sam_bam_to_fasta(aligned_file, file_type):
+    ## https://www.biostars.org/p/129763/
     '''
-    Converts SAM or BAM files to fasta format
+    Converts SAM or BAM files to fasta format conda install -c bioconda bam2fasta
     
     Parameters:
         aligned_file (str): input file in SAM or BAM forma
@@ -191,26 +193,31 @@ def sam_bam_to_fasta(aligned_file, file_type, fasta_file = 'result.fasta'):
     Returns (file): match - A boolean value that is true if the two sequences 
                     are equal, and false if not
     '''
-    fasta_file = None
     if file_type == "sam":
-        ## make sure to open the file
         ## Use samtools view to convert to bam (dependency)
-    ##Change bam file to fasta file - bam2fasta
-    
-    return fasta_file
+        exit_status = os.system('samtools view -S -b ' + aligned_file + ' > temp.bam')
+        temp_bam = open('temp.bam')
+        bamtofasta = os.system('samtools bam2fq ' + temp_bam + ' | seqtk seq -A > temp.fa')
+        stream = open('temp.fasta')
+    else:
+        ##Change bam file to fasta file
+        bamtofasta = os.system('samtools bam2fq ' + aligned_file + ' | seqtk seq -A > temp.fa')
+        stream = open('temp.fasta')
+    return stream
 
 ## Converts fastq to fasta
 ## Change this function name DO THIS IN THE WORKFLOW
-def fastq_to_fasta(fastq_file, fasta_file = 'result.fasta'):
+def fastq_to_fasta(fastq_file):
     '''
-    DEPENDENCY: bioconda
+    DEPENDENCY: bioconda 
     https://onestopdataanalysis.com/fastq-to-fasta/
     https://janakiev.com/blog/python-shell-commands/
     https://bioconda.github.io/
     '''
-    stream = os.system('seqtk seq -a ' + fastq_file + ' > ' + fasta_file)
-    fasta_file = stream
-    return fasta_file
+    exit_status = os.system('seqtk seq -a ' + fastq_file + ' > temp.fasta')
+    ## exit status should be zero try except
+    stream = open('temp.fasta')
+    return stream
 
 def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     HLA_Gene_IDs = {'A': 3105, 'B': 3106, 'C': 3107, 'E': 3133, 'F': 3134, \
@@ -222,8 +229,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
-    os.system("curl -O https://github.com/ANHIG/IMGTHLA/Latest/fasta/hla_gen.fasta")
-    HLAs_data = read_HLA_data('hla_gen.fasta') ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
+    HLAs_data = read_HLA_data(HLAs_file, HLA_Gene_IDs) ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
     for allele in HLAs_data:
