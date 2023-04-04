@@ -75,13 +75,15 @@ def read_fasta(file_name, gene_id_dict):
     sequence = ''
     for line in file:
         if line.startswith('>') and sequence: ## Skip first id, this will be for all future ids
-            seq_id = seq_id[1:] ## Removes the carrot
+            seq_id = seq_id[1:-1] ## Removes the carrot
             ## Check if gene is within hla gene list
             id_list = seq_id.split()
-            get_gene = id_list[3]
-            gene_id = int(gene_id[8, len(gene_id)-1])
+            get_gene = id_list[4]
+            end = len(get_gene)-1
+            gene_id = int(get_gene[8:end])
             if (gene_id in gene_id_dict.values()):
                 hla_type = get_hla_type(gene_id, gene_id_dict)
+                sequence = sequence.replace('\\', '')
                 sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
                 seq_id = line.strip() ## All IDs 
                 sequence = ''            
@@ -94,13 +96,15 @@ def read_fasta(file_name, gene_id_dict):
     ## This handles the last sequence in the file
     if seq_id and sequence: ## Last sequence
         ## Check if gene is within hla gene list
-        seq_id = seq_id[1:] ## Removes the carrot
+        seq_id = seq_id[1:-1] ## Removes the carrot
         id_list = seq_id.split()
-        gene_id = id_list[3]
-        gene_id = int(gene_id[8, len(gene_id)-1])
+        get_gene = id_list[4]
+        end = len(get_gene)-1
+        gene_id = int(get_gene[8:end])
         if (gene_id in gene_id_dict.values()):
+            print("In dictionary")
             hla_type = get_hla_type(gene_id, gene_id_dict)
-            seq_id = seq_id[1:]
+            sequence = sequence.replace('\\', '')
             sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
     return sample_data_list
               
