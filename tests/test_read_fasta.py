@@ -11,7 +11,7 @@ def test_read_fasta_1():
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
-    file = "/Users/lauradavis/Desktop/BIOINF576/HLA_DNA_Typing/tests/Test_Data/initial_tests.fasta"
+    file = 'tests/Test_Data/initial_tests.fasta'
     sample_seqs = []
     sample_seqs.append(m.Sample_Seq('NC_000006.12:29942532-29945870 HLA-A [organism=Homo sapiens] [GeneID=3105] [chromosome=6]', 'AGATTCTCCCCAGACGCCGAGGATGGCCGTCATGGCGCCCCGAACCCTCCTCCTGCTACTCTCGGGGGCC\
 CTGGCCCTGACCCAGACCTGGGCGGGTGAGTGCGGGGTCGGGAGGGAAACCGCCTCTGCGGGGAGAAGCA\
@@ -77,7 +77,7 @@ def test_read_fasta_2():
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
-    file = "/Users/lauradavis/Desktop/BIOINF576/HLA_DNA_Typing/tests/Test_Data/initial_tests2.fasta"
+    file = 'tests/Test_Data/initial_tests2.fasta'
     sample_seqs = []
     sample_seqs.append(m.Sample_Seq('NC_000006.12:29942532-29945870 HLA-A [organism=Homo sapiens] [GeneID=3105] [chromosome=6]', 'AGATTCTCCCCAGACGCCGAGGATGGCCGTCATGGCGCCCCGAACCCTCCTCCTGCTACTCTCGGGGGCC\
 CTGGCCCTGACCCAGACCTGGGCGGGTGAGTGCGGGGTCGGGAGGGAAACCGCCTCTGCGGGGAGAAGCA\
