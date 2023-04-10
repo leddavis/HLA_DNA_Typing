@@ -353,8 +353,31 @@ TCA')
     hla_dict = {'A': [a1_HLA, a2_HLA], 'B': [b1_HLA, b2_HLA], 'C': [c1_HLA, c2_HLA]}
     file = 'tests/Test_Data/initial_hla_tests.fasta'
     test_hla_read = m.read_HLA_data(file, HLA_Gene_IDs)
-    for i in range(0, len(test_hla_read)):
-        print(test_hla_read[i].hla_id)
-        print(hla_dict[i].hla_id)
-        assert test_hla_read[i].hla_id == hla_dict[i].hla_id
-        assert test_hla_read[i].allele == hla_dict[i].allele
+    test_id_list = []
+    test_allele_list = []
+    for key in test_hla_read.keys():
+        for i in range(0, len(test_hla_read[key])):
+            test_id_list.append(test_hla_read[key][i].hla_id)
+            test_allele_list.append(test_hla_read[key][i].allele)
+    check_id_list = []
+    check_allele_list = []
+    for key in hla_dict.keys():
+        for i in range(0, len(hla_dict[key])):
+            check_id_list.append(hla_dict[key][i].hla_id)
+            check_allele_list.append(hla_dict[key][i].allele)
+    len_of_lists = len(check_id_list)
+    if len_of_lists == len(test_id_list):
+        for i in range(0, len_of_lists):
+            assert test_id_list[i] == check_id_list[i]
+            assert test_allele_list[i] == check_allele_list[i]
+    else:
+        assert FALSE
+    
+        ##assert test_hla_read[i].allele == hla_dict[i].allele
+    ##assert test_hla_read == hla_dict
+    ##for i in range(0, len(test_hla_read)):
+        ##print(test_hla_read[i])
+        ##print(test_hla_read[i].hla_id)
+        ##print(hla_dict[i].hla_id)
+        ##assert test_hla_read[i].hla_id == hla_dict[i].hla_id
+        ##assert test_hla_read[i].allele == hla_dict[i].allele
