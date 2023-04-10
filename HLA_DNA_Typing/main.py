@@ -75,13 +75,15 @@ def read_fasta(file_name, gene_id_dict):
     sequence = ''
     for line in file:
         if line.startswith('>') and sequence: ## Skip first id, this will be for all future ids
-            seq_id = seq_id[1:] ## Removes the carrot
+            seq_id = seq_id[1:-1] ## Removes the carrot
             ## Check if gene is within hla gene list
             id_list = seq_id.split()
-            get_gene = id_list[3]
-            gene_id = int(gene_id[8, len(gene_id)-1])
+            get_gene = id_list[4]
+            end = len(get_gene)-1
+            gene_id = int(get_gene[8:end])
             if (gene_id in gene_id_dict.values()):
                 hla_type = get_hla_type(gene_id, gene_id_dict)
+                sequence = sequence.replace('\\', '')
                 sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds sample to list
                 seq_id = line.strip() ## All IDs 
                 sequence = ''            
@@ -94,13 +96,15 @@ def read_fasta(file_name, gene_id_dict):
     ## This handles the last sequence in the file
     if seq_id and sequence: ## Last sequence
         ## Check if gene is within hla gene list
-        seq_id = seq_id[1:] ## Removes the carrot
+        seq_id = seq_id[1:-1] ## Removes the carrot
         id_list = seq_id.split()
-        gene_id = id_list[3]
-        gene_id = int(gene_id[8, len(gene_id)-1])
+        get_gene = id_list[4]
+        end = len(get_gene)-1
+        gene_id = int(get_gene[8:end])
         if (gene_id in gene_id_dict.values()):
+            print("In dictionary")
             hla_type = get_hla_type(gene_id, gene_id_dict)
-            seq_id = seq_id[1:]
+            sequence = sequence.replace('\\', '')
             sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
     return sample_data_list
               
@@ -193,7 +197,6 @@ def sam_bam_to_fasta(aligned_file, file_type):
     Returns (file): match - A boolean value that is true if the two sequences 
                     are equal, and false if not
     '''
-    fasta_file = None
     if file_type == "sam":
         ## Use samtools view to convert to bam (dependency)
         exit_status = os.system('samtools view -S -b ' + aligned_file + ' > temp.bam')
@@ -230,8 +233,7 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
-    os.system("curl -O https://github.com/ANHIG/IMGTHLA/Latest/fasta/hla_gen.fasta")
-    HLAs_data = read_HLA_data('hla_gen.fasta') ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
+    HLAs_data = read_HLA_data(HLAs_file, HLA_Gene_IDs) ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
     for allele in HLAs_data:
