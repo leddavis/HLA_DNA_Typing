@@ -1,1 +1,0 @@
-from HLA_DNA_Typing import main as m
