@@ -134,7 +134,7 @@ def read_HLA_data(HLAs_file, gene_id_dict):
             id_list = line.split()
             hla_form = id_list[1]
             get_hla = hla_form.split('*')
-            hla_type = get_hla_type[0]
+            hla_type = get_hla[0]
             if (hla_type in gene_id_dict.keys()):
                 if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
@@ -155,7 +155,7 @@ def read_HLA_data(HLAs_file, gene_id_dict):
         id_list = hla_id.split()
         hla_form = id_list[1]
         get_hla = hla_form.split('*')
-        hla_type = get_hla_type[0]
+        hla_type = get_hla[0]
         if (hla_type in gene_id_dict.keys()):
             if (hla_type in HLAs_data.keys()):
                     HLAs_data[hla_type].append(HLA_Allele(hla_id, allele))
