@@ -354,5 +354,7 @@ TCA')
     file = 'tests/Test_Data/initial_hla_tests.fasta'
     test_hla_read = m.read_HLA_data(file, HLA_Gene_IDs)
     for i in range(0, len(test_hla_read)):
+        print(test_hla_read[i].hla_id)
+        print(hla_dict[i].hla_id)
         assert test_hla_read[i].hla_id == hla_dict[i].hla_id
         assert test_hla_read[i].allele == hla_dict[i].allele
