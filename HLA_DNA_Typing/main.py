@@ -121,10 +121,10 @@ def read_HLA_data(HLAs_file, gene_id_dict):
                     corresponding HLA_Allele objects as the values
     '''
     HLAs_data = {} ## Dictionary with keys as HLA genes and values as the alleles for that gene
-    if '.gz' in file_name:
-        file = gzip.open(file_name, 'rt')
+    if '.gz' in HLAs_file:
+        file = gzip.open(HLAs_file, 'rt')
     else:
-        file = open(file_name, 'rt')       
+        file = open(HLAs_file, 'rt')       
     hla_id = ''
     allele = ''
     for line in file:
