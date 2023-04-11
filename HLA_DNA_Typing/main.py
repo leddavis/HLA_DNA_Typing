@@ -1,5 +1,4 @@
 import pandas as pd
-import bamnostic as bs
 import os
 
 class Sample_Seq:
