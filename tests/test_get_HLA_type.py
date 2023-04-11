@@ -26,6 +26,7 @@ def test_get_HLA_type_b():
                    'DRB2': 3124, 'DRB3': 3125, 'DRB4': 3126, 'DRB5': 3127, 'DRB6': 3128, \
                    'DRB7': 3129, 'DRB8': 3130, 'DRB9': 3132, 'HFE': 3077, 'MICA': 100507436, \
                    'MICB': 4277, 'TAP1': 6890, 'TAP2': 6891}
+    gene_id = 3106
     expected_key = "B"
     key = m.get_hla_type(gene_id, HLA_Gene_IDs)
     assert key == expected_key, "The HLA type is " + expected_key + ", not " + key

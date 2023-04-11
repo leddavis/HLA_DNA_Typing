@@ -1,5 +1,4 @@
 import pandas as pd
-import bamnostic as bs
 import os
 
 class Sample_Seq:
@@ -102,7 +101,6 @@ def read_fasta(file_name, gene_id_dict):
         end = len(get_gene)-1
         gene_id = int(get_gene[8:end])
         if (gene_id in gene_id_dict.values()):
-            print("In dictionary")
             hla_type = get_hla_type(gene_id, gene_id_dict)
             sequence = sequence.replace('\\', '')
             sample_data_list.append(Sample_Seq(seq_id, sequence, hla_type)) ## Adds last sample to list
@@ -121,10 +119,10 @@ def read_HLA_data(HLAs_file, gene_id_dict):
                     corresponding HLA_Allele objects as the values
     '''
     HLAs_data = {} ## Dictionary with keys as HLA genes and values as the alleles for that gene
-    if '.gz' in file_name:
-        file = gzip.open(file_name, 'rt')
+    if '.gz' in HLAs_file:
+        file = gzip.open(HLAs_file, 'rt')
     else:
-        file = open(file_name, 'rt')       
+        file = open(HLAs_file, 'rt')       
     hla_id = ''
     allele = ''
     for line in file:
@@ -179,9 +177,7 @@ def match_HLA(sample_data, HLA_data):
     match = False
     ## Compare sample to HLA_Alleles for present alleles
     if sample_data == HLA_data:
-        match = true
-    else:
-        match = false
+        match = True
     return match
 
 ## Converts SAM/BAM file to fasta
@@ -236,12 +232,13 @@ def HLA_DNA_Typing(HLAs_file, sample_file, sample_file_type):
     HLAs_data = read_HLA_data(HLAs_file, HLA_Gene_IDs) ## Get this to be the file directly from the IGHT-HLA database repository -- For now use downloaded version
     sample_data = read_sample_data(sample_file, sample_file_type, HLA_Gene_IDs) ## List of Sample_Seqs
     matches = []
-    for allele in HLAs_data:
-        for seq in sample_data:
-            is_Match = match_HLA(seq.sequence, allele.sequence) ## check the key that matches hla_type for seq
-            if is_Match:
-                ## if True, add to master list for output
-                matches.append(allele.ID)
+    for key in HLAs_data.keys():
+        for i in range(0, len(HLAs_data[key])):
+            for seq in sample_data:
+                is_Match = match_HLA(seq.sequence, HLAs_data[key][i].allele) ## check the key that matches hla_type for seq
+                if is_Match:
+                    ## if True, add to master list for output
+                    matches.append(HLAs_data[key][i].hla_id)
     return matches
               
               
